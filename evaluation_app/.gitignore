@@ -1,0 +1,43 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local runtime data: the SQLite database (accounts, password hashes,
+# evaluations), its backups and unsaved-work dumps. Created on first launch from
+# data/*.csv -- never commit it.
+storage/
+exports/
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+unsaved-*.json*
+
+# Datasets are ignored by default so real (clinical) data is never committed by
+# accident, whatever the format or subfolder. Only the synthetic demo set is
+# tracked.
+data/*
+!data/sample_dataset.csv
+
+# Exported evaluation results (default export names are <account>_results.*).
+*_results.csv
+*_results.jsonl
+results.jsonl
+eval_results.jsonl
+
+# Code-signing material and local environment
+*.pfx
+*.p12
+.env
+
+.DS_Store
+Thumbs.db
+
+build/
+dist/
+*.spec.bak
+
+# Local agent tooling state
+.omc/

@@ -1,0 +1,16 @@
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Local agent tooling state
+.omc/
+.omx/
+
+# Never commit databases or study data
+*.db
+*.db-journal
+*.db-wal
+*.db-shm

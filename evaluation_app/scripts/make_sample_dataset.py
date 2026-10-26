@@ -1,0 +1,228 @@
+"""Generate data/sample_dataset.csv -- SYNTHETIC demo data, no real patients.
+
+Every note below was written from scratch for demonstration. Names, dates,
+ages and identifiers are deliberately absent or fictional. Each case appears
+twice with a different Brief Hospital Course (one complete, one with
+deliberate omissions/errors) so the scoring rubric has something to catch.
+
+Usage:
+    python scripts/make_sample_dataset.py
+"""
+
+import csv
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "data" / "sample_dataset.csv"
+
+CASES = [
+    {
+        "note": """Chief Complaint:
+Shortness of breath and fever
+
+Major Surgical or Invasive Procedure:
+None
+
+History of Present Illness:
+Patient in their late 60s with a history of COPD and hypertension presented
+with 3 days of productive cough, fever to 38.9 C and worsening dyspnea. Unable
+to walk more than a few steps without stopping. No chest pain. No recent travel.
+
+Past Medical History:
+- COPD (FEV1 55% predicted), on tiotropium
+- Hypertension
+- Former smoker, 40 pack-years, quit 5 years ago
+
+Physical Exam on Admission:
+T 38.6 C, HR 108, BP 132/78, RR 26, SpO2 86% on room air.
+Coarse crackles at the right base, scattered expiratory wheezes.
+
+Pertinent Results:
+WBC 15.2 (85% neutrophils), CRP 142 mg/L, procalcitonin 1.8 ng/mL.
+Chest X-ray: right lower lobe consolidation, no effusion.
+Blood cultures: no growth at 48 hours. Sputum: Streptococcus pneumoniae.
+
+Discharge Medications:
+1. Amoxicillin-clavulanate 875/125 mg PO BID x 3 more days
+2. Tiotropium 18 mcg inhaled daily
+3. Albuterol inhaler 2 puffs q4h PRN
+4. Amlodipine 5 mg PO daily
+
+Discharge Diagnosis:
+Community-acquired pneumonia (right lower lobe) with acute COPD exacerbation
+
+Discharge Condition:
+Mental status: clear and coherent. Ambulatory, independent.
+SpO2 93% on room air at rest and with ambulation.
+
+Discharge Instructions:
+Complete the antibiotic course. Return for fever, worsening breathlessness or
+chest pain. Follow up with primary care in 1 week and pulmonology in 4 weeks.""",
+        "bhc_good": """Patient with COPD admitted with community-acquired pneumonia of the right lower
+lobe complicated by an acute COPD exacerbation and hypoxemia (SpO2 86% on room
+air).
+
+# Pneumonia: Started on IV ceftriaxone and azithromycin. Sputum grew
+Streptococcus pneumoniae; blood cultures remained negative. Fever resolved by
+hospital day 2 and WBC normalized. Transitioned to oral amoxicillin-clavulanate
+on day 4 to complete a 7-day course.
+
+# COPD exacerbation / hypoxemia: Treated with prednisone 40 mg for 5 days,
+scheduled nebulized bronchodilators and supplemental oxygen up to 3 L by nasal
+cannula, weaned to room air by day 4. Home tiotropium continued.
+
+# Hypertension: Amlodipine continued; blood pressure well controlled.
+
+Discharged home in stable condition, ambulating independently with SpO2 93% on
+room air, with primary care follow-up in 1 week and pulmonology in 4 weeks.""",
+        "bhc_flawed": """Patient admitted with pneumonia. Was given antibiotics and oxygen. Pt improved
+and O2 was weaned. Abx changed to PO. Blood cultures grew Staph aureus which
+was treated. Patient also had COPD and got steroids, steroids, and nebs. D/c
+home.""",
+    },
+    {
+        "note": """Chief Complaint:
+Right lower quadrant abdominal pain
+
+Major Surgical or Invasive Procedure:
+Laparoscopic appendectomy
+
+History of Present Illness:
+Patient in their 30s with no significant past history presented with 18 hours
+of periumbilical pain migrating to the right lower quadrant, anorexia, nausea
+and one episode of vomiting.
+
+Past Medical History:
+None. No prior surgery.
+
+Physical Exam on Admission:
+T 38.1 C, HR 96. Tenderness and guarding at McBurney's point, positive Rovsing
+sign.
+
+Pertinent Results:
+WBC 13.8. Lipase normal. Urinalysis unremarkable. Pregnancy test negative.
+CT abdomen/pelvis: dilated appendix (11 mm) with periappendiceal fat stranding,
+no abscess or free air.
+
+Pathology:
+Acute suppurative appendicitis, no perforation.
+
+Discharge Medications:
+1. Acetaminophen 1 g PO q8h PRN pain
+2. Ibuprofen 400 mg PO q8h PRN pain, with food
+
+Discharge Diagnosis:
+Acute uncomplicated appendicitis, status post laparoscopic appendectomy
+
+Discharge Condition:
+Mental status: clear and coherent. Ambulatory, independent. Tolerating a
+regular diet. Pain controlled on oral medication.
+
+Discharge Instructions:
+No heavy lifting for 2 weeks. Keep incisions clean and dry. Return for fever,
+increasing abdominal pain, wound redness or drainage. Surgical clinic follow-up
+in 2 weeks.""",
+        "bhc_good": """Patient presented with 18 hours of migratory right lower quadrant pain, fever and
+leukocytosis; CT confirmed acute appendicitis without abscess or perforation.
+
+Taken to the operating room on the day of admission for an uncomplicated
+laparoscopic appendectomy and received perioperative cefazolin and
+metronidazole. Pathology showed acute suppurative appendicitis without
+perforation, so no further antibiotics were given.
+
+Post-operatively the diet was advanced to regular on post-operative day 1 and
+pain was controlled on oral acetaminophen and ibuprofen. Afebrile with
+incisions clean.
+
+Discharged home on post-operative day 1 in good condition, ambulating
+independently and tolerating a regular diet, with surgical clinic follow-up in
+2 weeks.""",
+        "bhc_flawed": """Patient had appendicitis and underwent an open appendectomy because the appendix
+was perforated, so IV antibiotics were continued for 7 days. Recovered well.""",
+    },
+    {
+        "note": """Chief Complaint:
+Palpitations and lightheadedness
+
+Major Surgical or Invasive Procedure:
+Transthoracic echocardiogram
+
+History of Present Illness:
+Patient in their 70s with hypertension and type 2 diabetes presented with 6 hours
+of palpitations and lightheadedness. No syncope or chest pain. Found to be in
+atrial fibrillation with rapid ventricular response, rate 140s.
+
+Past Medical History:
+- Hypertension
+- Type 2 diabetes mellitus, on metformin
+- Chronic kidney disease stage 3a (baseline creatinine 1.3)
+
+Physical Exam on Admission:
+HR 142 irregularly irregular, BP 118/70, SpO2 97% on room air.
+No jugular venous distension, lungs clear, no peripheral edema.
+
+Pertinent Results:
+TSH normal. Troponin negative x2. Creatinine 1.4. Potassium 4.1, magnesium 2.0.
+ECG: atrial fibrillation with RVR, no ischemic changes.
+Echocardiogram: LVEF 55%, mildly dilated left atrium, no significant valve
+disease.
+
+Discharge Medications:
+1. Metoprolol succinate 100 mg PO daily (NEW)
+2. Apixaban 5 mg PO BID (NEW)
+3. Lisinopril 10 mg PO daily
+4. Metformin 500 mg PO BID
+
+Discharge Diagnosis:
+New-onset atrial fibrillation with rapid ventricular response
+CHA2DS2-VASc score 4
+
+Discharge Condition:
+Mental status: clear and coherent. Ambulatory, independent.
+Heart rate 70s-80s at rest.
+
+Discharge Instructions:
+Take apixaban twice daily; do not miss doses. Report any bleeding, black
+stools, chest pain or fainting. Cardiology follow-up in 2 weeks to discuss
+rhythm control.""",
+        "bhc_good": """Patient with hypertension, diabetes and CKD 3a admitted with new-onset atrial
+fibrillation with rapid ventricular response (HR 140s), hemodynamically stable.
+
+# Atrial fibrillation: Rate controlled with IV then oral metoprolol, titrated to
+metoprolol succinate 100 mg daily with resting HR 70s-80s. No reversible
+trigger identified (TSH, electrolytes and troponin normal). Echocardiogram
+showed preserved LVEF (55%) and a mildly dilated left atrium. CHA2DS2-VASc 4,
+so started on apixaban 5 mg BID after discussing bleeding risk; dose
+appropriate for age and renal function.
+
+# CKD 3a: Creatinine stable at baseline (1.4).
+
+# Diabetes: Metformin held in hospital with sliding-scale insulin, resumed at
+discharge.
+
+Discharged home in stable condition with cardiology follow-up in 2 weeks to
+discuss rhythm control.""",
+        "bhc_flawed": """Pt admitted w/ AF w/ RVR. Rate ctrl achieved w/ BB. TTE showed EF 35% so started
+on heart failure meds. Anticoag not started given CKD. Pt was discharged on
+metoprolol. The patient was discharged on metoprolol and is to continue
+metoprolol at home after discharge from the hospital.""",
+    },
+]
+
+
+def main():
+    rows = []
+    for index, case in enumerate(CASES, start=1):
+        rows.append((f"demo_{index:02d}_A", case["note"], case["bhc_good"]))
+        rows.append((f"demo_{index:02d}_B", case["note"], case["bhc_flawed"]))
+
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    with OUT.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["sample_id", "discharge_note_no_bhc", "brief_hospital_course"])
+        writer.writerows(rows)
+    print(f"Wrote {len(rows)} synthetic samples to {OUT}")
+
+
+if __name__ == "__main__":
+    main()
