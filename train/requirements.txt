@@ -1,0 +1,5 @@
+# Versions used in the study. Install a CUDA build of torch for your machine first.
+torch==2.8.0
+transformers==5.10.1
+peft==0.18.1
+accelerate==1.13.0

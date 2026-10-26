@@ -1,0 +1,22 @@
+# 8 GPUs on one machine, FSDP full sharding, bf16 (the study used 8x RTX A6000 48 GB).
+# Change num_processes for a different GPU count. For another model family, set
+# fsdp_transformer_layer_cls_to_wrap to its decoder-layer class.
+compute_environment: LOCAL_MACHINE
+distributed_type: FSDP
+mixed_precision: bf16
+num_machines: 1
+num_processes: 8
+machine_rank: 0
+fsdp_config:
+  fsdp_version: 1
+  fsdp_auto_wrap_policy: TRANSFORMER_BASED_WRAP
+  fsdp_transformer_layer_cls_to_wrap: Qwen3_5DecoderLayer
+  fsdp_sharding_strategy: FULL_SHARD
+  fsdp_backward_prefetch: BACKWARD_PRE
+  fsdp_offload_params: false
+  fsdp_use_orig_params: true
+  fsdp_sync_module_states: true
+  fsdp_cpu_ram_efficient_loading: true
+  fsdp_state_dict_type: FULL_STATE_DICT
+  # Activation checkpointing is done by the scripts (Hugging Face, reentrant).
+  fsdp_activation_checkpointing: false
