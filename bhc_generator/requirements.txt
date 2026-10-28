@@ -1,0 +1,7 @@
+# Versions used in the study. Install a CUDA build of torch for your machine first.
+torch==2.10.0
+transformers==5.12.1
+peft==0.19.1
+accelerate==1.14.0
+# generate_bhc.py only
+vllm==0.19.0
