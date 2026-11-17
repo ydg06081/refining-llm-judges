@@ -19,6 +19,7 @@ From the repository root (the app keeps `data/`, `storage/` and `exports/` in
 the directory it is started from):
 
 ```bash
+cd evaluation_app
 python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
@@ -138,14 +139,14 @@ data.**
 
 ## Building a Windows package
 
-On Windows, with Python on `PATH`:
+On Windows, from `evaluation_app/`, with Python on `PATH`:
 
 ```bat
 scripts\build_windows.bat
 ```
 
-The script sets everything up itself: it creates `.venv\` in the repository
-root, installs `requirements.txt` and `requirements-build.txt` (PyInstaller),
+The script sets everything up itself: it creates `.venv\` in `evaluation_app/`,
+installs `requirements.txt` and `requirements-build.txt` (PyInstaller),
 and builds with `doctor-eval.spec`. The result is a portable folder
 `dist\doctor-eval\` containing `doctor-eval.exe`; no Python is needed on the
 machines that run it. Give the whole folder to evaluators.

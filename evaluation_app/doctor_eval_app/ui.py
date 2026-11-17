@@ -16,11 +16,9 @@ from doctor_eval_app.storage import (
 NOTE_MIN_HEIGHT = 480
 COURSE_MIN_HEIGHT = 120
 COURSE_MAX_HEIGHT = 220
-TIMER_BUTTON_LAYOUT = [["Start", "End", "Reset"], ["Previous", "Next"]]
 SAMPLE_NAV_LABELS = {"previous": "←", "next": "→"}
 NOTICE_DEFAULT = "Start를 눌러야 점수와 자유서술 입력이 열립니다."
 NOTICE_EDIT = "Edit 버튼을 누르면 점수와 자유서술을 편집할 수 있고, 시간도 이어서 측정됩니다."
-LOGIN_DEMO_BUTTONS_ENABLED = False
 EVALUATOR_CARD_MIN_WIDTH = 300
 EVALUATOR_CARD_MIN_HEIGHT = 240
 CORRECTNESS_COUNT_MAX = 999
@@ -686,10 +684,6 @@ def run_app(store, clock=None):
             self.reader.setWidget(reader_body)
             splitter.addWidget(self.reader)
 
-            # Brief Hospital Course gets the column the LLM-as-Judge panel used
-            # to occupy. It used to be a short fixed-height box under the note,
-            # sharing that column; on its own it reads at full height next to
-            # the note, which is the text being scored.
             course_panel = QWidget()
             course_layout = QVBoxLayout(course_panel)
             # Empty stand-in for the reader column's sample title, so the two

@@ -1,8 +1,7 @@
 """Tests for the data-loss / field-reliability fixes.
 
 Each test pins a specific failure mode a clinician could hit while running the
-app unsupervised, so the fix cannot silently regress. The scarce resource is the
-clinician's completed work; these guard it.
+app unsupervised, so the fix cannot silently regress.
 """
 
 import json

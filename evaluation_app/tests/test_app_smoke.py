@@ -26,10 +26,8 @@ from doctor_eval_app.ui import (
     EVALUATOR_CARD_MIN_HEIGHT,
     EVALUATOR_CARD_MIN_WIDTH,
     COURSE_MAX_HEIGHT,
-    LOGIN_DEMO_BUTTONS_ENABLED,
     NOTE_MIN_HEIGHT,
     SAMPLE_NAV_LABELS,
-    TIMER_BUTTON_LAYOUT,
     _format_score,
     _progress_percent,
     run_app,
@@ -333,14 +331,11 @@ class AppSmokeTest(unittest.TestCase):
 
     def test_ui_module_exposes_run_app_without_importing_qt(self):
         self.assertTrue(callable(run_app))
-        self.assertFalse(LOGIN_DEMO_BUTTONS_ENABLED)
 
     def test_reader_layout_prioritizes_discharge_note_space(self):
         self.assertGreaterEqual(NOTE_MIN_HEIGHT, COURSE_MAX_HEIGHT * 2)
 
-    def test_timer_controls_use_single_start_pause_and_arrow_navigation(self):
-        self.assertEqual(TIMER_BUTTON_LAYOUT[0], ["Start", "End", "Reset"])
-        self.assertEqual(TIMER_BUTTON_LAYOUT[1], ["Previous", "Next"])
+    def test_sample_navigation_labels_use_arrows(self):
         self.assertEqual(SAMPLE_NAV_LABELS, {"previous": "←", "next": "→"})
 
     def test_admin_score_formatting(self):
@@ -461,9 +456,6 @@ class AppSmokeTest(unittest.TestCase):
             QApplication.exec = original_exec
 
     def test_admin_dashboard_uses_large_cards(self):
-        # Previously also asserted ADMIN_RAW_PREVIEW_ENABLED is False. That
-        # constant gated nothing -- it was never read outside this test -- so the
-        # assertion read as a guarantee the app did not actually enforce.
         self.assertGreaterEqual(EVALUATOR_CARD_MIN_WIDTH, 300)
         self.assertGreaterEqual(EVALUATOR_CARD_MIN_HEIGHT, 240)
 

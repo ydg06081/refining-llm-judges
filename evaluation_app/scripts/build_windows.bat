@@ -52,8 +52,7 @@ if not exist "dist\doctor-eval\data" mkdir "dist\doctor-eval\data"
 :: Ship ONLY the three columns the app reads. A source CSV may carry extra
 :: columns (identifiers, demographics, dates) the app never uses; copying the
 :: whole data\ folder would put all of that on every evaluator's laptop.
-:: make_dist_csv trims it (and fails the build if a required column is missing,
-:: so we never ship a broken or demo-only dataset).
+:: make_dist_csv fails the build if a required column is missing.
 .venv\Scripts\python.exe scripts\make_dist_csv.py ^
   "data\sample_dataset.csv" ^
   "dist\doctor-eval\data\sample_dataset.csv"
@@ -62,8 +61,6 @@ if errorlevel 1 (
   exit /b 1
 )
 
-:: Guard against shipping a demo-only build: the dataset MUST be present, or
-:: evaluators silently get 4 placeholder samples.
 if not exist "dist\doctor-eval\data\sample_dataset.csv" (
   echo ERROR: evaluation dataset missing from dist. Aborting.
   exit /b 1

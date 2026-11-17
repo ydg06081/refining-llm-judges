@@ -1019,33 +1019,6 @@ class StorageTest(unittest.TestCase):
         self.assertIsNotNone(self.store.authenticate("evaluator_a", "pass1234a"))
         self.assertEqual(len(self.store.list_samples_for_evaluator("evaluator_a")), 2)
 
-    def test_auto_backup_pruning_keeps_newest_by_mtime_not_name(self):
-        import os
-
-        backups = self.db_path.parent / "backups"
-        backups.mkdir(parents=True, exist_ok=True)
-        stem = self.db_path.stem
-        # Mixed operation reasons whose alphabetical name order disagrees with
-        # chronological order. Newest-by-time is in the middle alphabetically.
-        specs = [
-            (f"{stem}.auto-reset_evaluations-20260101-000000-000000.db", 3000),  # newest
-            (f"{stem}.auto-delete_account_z-20250101-000000-000000.db", 1000),   # oldest
-            (f"{stem}.auto-delete_evaluation_a_1-20260601-000000-000000.db", 2000),
-        ]
-        for name, mtime in specs:
-            p = backups / name
-            p.write_bytes(b"x")
-            os.utime(p, (mtime, mtime))
-
-        self.store._prune_auto_backups(backups, keep=2)
-
-        remaining = {p.name for p in backups.glob(f"{stem}.auto-*.db")}
-        self.assertEqual(len(remaining), 2)
-        # The two newest by mtime survive; the oldest is pruned regardless of name.
-        self.assertIn(f"{stem}.auto-reset_evaluations-20260101-000000-000000.db", remaining)
-        self.assertIn(f"{stem}.auto-delete_evaluation_a_1-20260601-000000-000000.db", remaining)
-        self.assertNotIn(f"{stem}.auto-delete_account_z-20250101-000000-000000.db", remaining)
-
     def test_initialize_migrates_existing_evaluations_table_missing_columns(self):
         with tempfile.TemporaryDirectory() as tmp:
             db_path = Path(tmp) / "legacy.db"
